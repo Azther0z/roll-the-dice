@@ -14,6 +14,7 @@ public class Healer extends BaseUnit implements Healable {
 			healBase = 0;
 		}
 		this.healBase = healBase;
+		this.setHealVal(healBase);
 	}
 
 	@Override
@@ -39,7 +40,6 @@ public class Healer extends BaseUnit implements Healable {
 
 	@Override
 	public void executeHeal() {
-		// TODO Auto-generated method stub
 		BaseUnit healTarget = this;
 		for (BaseUnit enemy : FightLogic.getInstance().getEnemyList()) {
 			if (enemy.getHp() <= healTarget.getHp() && !enemy.equals(healTarget)) {
