@@ -70,7 +70,6 @@ public class Dice {
 		} else if (this.getActionType() == ActionType.DEFEND) {
 			this.setActionType(ActionType.ATTACK);
 		}
-		// TODO link with GameLogic
 	}
 
 	public String getImagePath() {
