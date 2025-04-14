@@ -8,6 +8,7 @@ import dice.MultiplyDice;
 import node.Edge;
 import node.EnemyNode;
 import node.Node;
+import node.RestNode;
 import node.ShopNode;
 import unit.player.Player;
 
@@ -79,12 +80,31 @@ public class GameLogic {
 		this.getPlayer().addDice(new Dice(1, 20));
 		this.getPlayer().addDice(new MultiplyDice(1, 6));
 		this.getPlayer().addDice(new DivideDice(1, 4));
+		generateMap();
+	}
+
+	public void rest() {
+		this.getPlayer().rollDice();
+		this.getPlayer().setAllDiceAcionType(ActionType.HEAL);
+		this.getPlayer().updateHeal();
+		this.getPlayer().executeHeal();
+	}
+
+	private void generateMap() {
 		// TODO randomly create map
 		edgeList = new ArrayList<Edge>();
 		nodeGrid = new ArrayList<ArrayList<Node>>();
 		for (int i = 0; i < GameConfig.MAX_ROW; i++) {
 			nodeGrid.add(new ArrayList<Node>());
 			for (int j = 0; j < GameConfig.MAX_COL; j++) {
+				if (i == 2) {
+					nodeGrid.get(i).add(new ShopNode(i, j));
+					continue;
+				}
+				if (i == GameConfig.MAX_ROW - 1) {
+					nodeGrid.get(i).add(new RestNode(i, j));
+					continue;
+				}
 				nodeGrid.get(i).add(new EnemyNode(i, j));
 			}
 		}
@@ -102,13 +122,6 @@ public class GameLogic {
 		for (int j = 0; j < GameConfig.MAX_COL; j++) {
 			edgeList.add(new Edge(startNode, nodeGrid.get(0).get(j)));
 		}
-	}
-
-	public void rest() {
-		this.getPlayer().rollDice();
-		this.getPlayer().setAllDiceAcionType(ActionType.HEAL);
-		this.getPlayer().updateHeal();
-		this.getPlayer().executeHeal();
 	}
 
 }
