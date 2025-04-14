@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import dice.Dice;
 import dice.DivideDice;
 import dice.MultiplyDice;
+import node.BossNode;
 import node.Edge;
 import node.EnemyNode;
 import node.Node;
@@ -99,6 +100,7 @@ public class GameLogic {
 	}
 
 	public void newGameLogic() {
+		this.setCurrentNode(null);
 		this.setDefeated(false);
 		this.setWin(false);
 		this.setPlayer(new Player(UnitConfig.PLAYER.maxHp, UnitConfig.PLAYER.name));
@@ -143,7 +145,7 @@ public class GameLogic {
 
 			}
 		}
-		bossNode = new EnemyNode(GameConfig.MAX_ROW, 0);
+		bossNode = new BossNode(GameConfig.MAX_ROW, 0);
 		for (int j = 0; j < GameConfig.MAX_COL; j++) {
 			edgeList.add(new Edge(nodeGrid.get(GameConfig.MAX_ROW - 1).get(j), bossNode));
 		}
