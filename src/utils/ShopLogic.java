@@ -42,10 +42,6 @@ public class ShopLogic {
 		this.shopList = shopList;
 	}
 
-	public void updateShop() {
-		// TODO wtf is this
-	}
-
 	public boolean buyDice(ShopItem item) {
 		if (!item.isBought() && item.getCost() <= money) {
 			item.setBought(true);
