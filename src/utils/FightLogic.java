@@ -97,6 +97,9 @@ public class FightLogic {
 		}
 		if (enemyList.size() == 0) {
 			this.setEnd(true);
+			if (GameLogic.getInstance().getBossNode().equals(GameLogic.getInstance().getCurrentNode())) {
+				GameLogic.getInstance().setWin(true);
+			}
 			return;
 		}
 		for (BaseUnit enemy : enemyList) {
@@ -110,6 +113,9 @@ public class FightLogic {
 				Healable healable = (Healable) enemy;
 				healable.executeHeal();
 			}
+		}
+		if (GameLogic.getInstance().getPlayer().getHp() <= 0) {
+			GameLogic.getInstance().setDefeated(true);
 		}
 		initializeTurn();
 	}
