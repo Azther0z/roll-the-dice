@@ -23,6 +23,8 @@ public class MapMenu extends StackPane {
 				nodePane.add(node, j, i);
 			}
 		}
+		nodePane.add(GameLogic.getInstance().getBossNode(), GameLogic.getInstance().getBossNode().getCol(),
+				GameLogic.getInstance().getBossNode().getRow());
 		nodePane.setAlignment(Pos.CENTER);
 		this.getChildren().add(nodePane);
 	}
@@ -47,8 +49,12 @@ public class MapMenu extends StackPane {
 		this.getChildren().add(new ShopMenu());
 	}
 
-	// TODO WinMenu
+	public void initializeWinMenu() {
+		this.getChildren().add(new WinMenu());
+	}
 
-	// TODO LoseMenu
+	public void initializeLoseMenu() {
+		this.getChildren().add(new LoseMenu());
+	}
 
 }
