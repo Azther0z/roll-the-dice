@@ -7,6 +7,7 @@ import unit.base.BaseUnit;
 import unit.base.Defendable;
 import unit.base.Healable;
 import unit.monster.Attacker;
+import unit.monster.Boss;
 import unit.monster.Defender;
 import unit.monster.Healer;
 import unit.monster.Hybrid;
@@ -30,14 +31,12 @@ public class FightLogic {
 
 	public void newFightLogic() {
 		this.enemyList = new ArrayList<BaseUnit>();
-		// TODO randomly add enemy
-		this.enemyList
-				.add(new Attacker(UnitConfig.ATTACKER.maxHp, UnitConfig.ATTACKER.name, UnitConfig.ATTACKER.atkBase));
-		this.enemyList
-				.add(new Defender(UnitConfig.DEFENDER.maxHp, UnitConfig.DEFENDER.name, UnitConfig.DEFENDER.defBase));
-		this.enemyList.add(new Hybrid(UnitConfig.HYBRID.maxHp, UnitConfig.HYBRID.name, UnitConfig.HYBRID.defBase));
-		this.enemyList.add(new Vampire(UnitConfig.VAMPIRE.maxHp, UnitConfig.VAMPIRE.name, UnitConfig.VAMPIRE.atkBase));
-		this.enemyList.add(new Healer(UnitConfig.HEALER.maxHp, UnitConfig.HEALER.name, UnitConfig.HEALER.healBase));
+		if (GameLogic.getInstance().getCurrentNode().equals(GameLogic.getInstance().getBossNode())) {
+			this.enemyList.add(new Boss(UnitConfig.BOSS.maxHp, UnitConfig.BOSS.name, UnitConfig.BOSS.atkBase,
+					UnitConfig.BOSS.defBase));
+		} else {
+			addRandomEnemy();
+		}
 		initializeTurn();
 		updateTurn();
 		this.setEnd(false);
@@ -118,5 +117,30 @@ public class FightLogic {
 			GameLogic.getInstance().setDefeated(true);
 		}
 		initializeTurn();
+	}
+
+	private void addRandomEnemy() {
+		int amount = (int) Math.round(2 + 3 * Math.random());
+		System.out.println("Amount:" + amount);
+		for (int i = 0; i < amount; i++) {
+			int monster = (int) Math.round(4 * Math.random());
+			System.out.println("Monster:" + monster);
+			if (monster == 0) {
+				this.enemyList.add(
+						new Attacker(UnitConfig.ATTACKER.maxHp, UnitConfig.ATTACKER.name, UnitConfig.ATTACKER.atkBase));
+			} else if (monster == 1) {
+				this.enemyList.add(
+						new Defender(UnitConfig.DEFENDER.maxHp, UnitConfig.DEFENDER.name, UnitConfig.DEFENDER.defBase));
+			} else if (monster == 2) {
+				this.enemyList
+						.add(new Hybrid(UnitConfig.HYBRID.maxHp, UnitConfig.HYBRID.name, UnitConfig.HYBRID.defBase));
+			} else if (monster == 3) {
+				this.enemyList.add(
+						new Vampire(UnitConfig.VAMPIRE.maxHp, UnitConfig.VAMPIRE.name, UnitConfig.VAMPIRE.atkBase));
+			} else if (monster == 4) {
+				this.enemyList
+						.add(new Healer(UnitConfig.HEALER.maxHp, UnitConfig.HEALER.name, UnitConfig.HEALER.healBase));
+			}
+		}
 	}
 }
