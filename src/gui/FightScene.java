@@ -31,6 +31,7 @@ public class FightScene extends GridPane {
 			FightLogic.getInstance().endTurn();
 			updateFightScene();
 			if (FightLogic.getInstance().isEnd()) {
+				SceneManager.getInstance().getMapMenu().initializeRewardMenu();
 				SceneManager.getInstance().goToMap();
 			}
 		});
