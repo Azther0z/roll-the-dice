@@ -93,7 +93,6 @@ public class FightLogic {
 		for (int i = 0; i < enemyList.size(); i++) {
 			if (enemyList.get(i).getHp() <= 0) {
 				enemyList.remove(i);
-				// TODO might not work
 			}
 		}
 		if (enemyList.size() == 0) {
