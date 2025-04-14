@@ -1,22 +1,17 @@
 package gui;
 
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import utils.FightLogic;
-import gui.MainMenu;
+import utils.GameLogic;
 
 public class SceneManager {
 	private static SceneManager instance;
 	private Scene scene;
 	private BorderPane root;
-	private VBox mainMenu;
+	private MainMenu mainMenu;
 	private MapMenu mapMenu;
-	private GridPane fightScene;
+	private FightScene fightScene;
 
 	public SceneManager() {
 		this.newScene();
@@ -34,14 +29,19 @@ public class SceneManager {
 		this.mapMenu = mapMenu;
 	}
 
-	private void newScene() {
+	public void newScene() {
+		resetGame();
 		root = new BorderPane();
 		root.setPrefSize(800, 600);
+		scene = new Scene(root);
+		root.setCenter(mainMenu);
+	}
+	
+	public void resetGame() {
+		GameLogic.getInstance().newGameLogic();
 		mainMenu = new MainMenu();
 		mapMenu = new MapMenu();
 		fightScene = null;
-		scene = new Scene(root);
-		root.setCenter(mainMenu);
 	}
 
 	public static SceneManager getInstance() {
