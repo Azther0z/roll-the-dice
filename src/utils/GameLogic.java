@@ -19,6 +19,9 @@ public class GameLogic {
 	private ArrayList<Edge> edgeList;
 	private ArrayList<ArrayList<Node>> nodeGrid;
 	private Node currentNode;
+	private Node bossNode;
+	private boolean isDefeated;
+	private boolean isWin;
 
 	public GameLogic() {
 		this.newGameLogic();
@@ -55,6 +58,30 @@ public class GameLogic {
 		this.currentNode = currentNode;
 	}
 
+	public Node getBossNode() {
+		return bossNode;
+	}
+
+	public void setBossNode(Node bossNode) {
+		this.bossNode = bossNode;
+	}
+
+	public boolean isDefeated() {
+		return isDefeated;
+	}
+
+	public void setDefeated(boolean isDefeated) {
+		this.isDefeated = isDefeated;
+	}
+
+	public boolean isWin() {
+		return isWin;
+	}
+
+	public void setWin(boolean isWin) {
+		this.isWin = isWin;
+	}
+
 	public ArrayList<Edge> getEdgeList() {
 		return edgeList;
 	}
@@ -72,6 +99,8 @@ public class GameLogic {
 	}
 
 	public void newGameLogic() {
+		this.setDefeated(false);
+		this.setWin(false);
 		this.setPlayer(new Player(UnitConfig.PLAYER.maxHp, UnitConfig.PLAYER.name));
 		// TODO starter dice
 		this.getPlayer().addDice(new Dice(1, 6));
@@ -114,13 +143,9 @@ public class GameLogic {
 
 			}
 		}
-		Node bossNode = new EnemyNode(GameConfig.MAX_ROW, 0);
+		bossNode = new EnemyNode(GameConfig.MAX_ROW, 0);
 		for (int j = 0; j < GameConfig.MAX_COL; j++) {
 			edgeList.add(new Edge(nodeGrid.get(GameConfig.MAX_ROW - 1).get(j), bossNode));
-		}
-		Node startNode = new ShopNode(0, GameConfig.MAX_COL);
-		for (int j = 0; j < GameConfig.MAX_COL; j++) {
-			edgeList.add(new Edge(startNode, nodeGrid.get(0).get(j)));
 		}
 	}
 
