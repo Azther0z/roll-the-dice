@@ -6,15 +6,11 @@ import dice.Dice;
 
 public class ShopLogic {
 
-	private ArrayList<Dice> shopList;
-	private ArrayList<Integer> shopCost;
-	private ArrayList<Boolean> isBought;
+	private ArrayList<ShopItem> shopList;
 	private int money;
 
 	public ShopLogic() {
-		this.shopList = new ArrayList<Dice>();
-		this.shopCost = new ArrayList<Integer>();
-		this.isBought = new ArrayList<Boolean>();
+		this.shopList = new ArrayList<ShopItem>();
 		this.setMoney(0);
 		this.setMoney(0);
 		GameLogic.getInstance().getPlayer().rollDice();
@@ -23,9 +19,7 @@ public class ShopLogic {
 		}
 		// TODO randomly add dice
 		for (int i = 0; i < 4; i++) {
-			shopList.add(new Dice(1, 6));
-			shopCost.add(5);
-			isBought.add(false);
+			shopList.add(new ShopItem(new Dice(1, 6), 5));
 		}
 	}
 
@@ -40,15 +34,25 @@ public class ShopLogic {
 		this.money = money;
 	}
 
+	public ArrayList<ShopItem> getShopList() {
+		return shopList;
+	}
+
+	public void setShopList(ArrayList<ShopItem> shopList) {
+		this.shopList = shopList;
+	}
+
 	public void updateShop() {
 		// TODO wtf is this
 	}
 
-	public void buyDice(int index) {
-		if (!isBought.get(index) && shopCost.get(index) <= this.getMoney()) {
-			isBought.set(index, true);
-			GameLogic.getInstance().getPlayer().addDice(shopList.get(index));
-			this.setMoney(this.getMoney() - shopCost.get(index));
+	public boolean buyDice(ShopItem item) {
+		if (!item.isBought() && item.getCost() <= money) {
+			item.setBought(true);
+			GameLogic.getInstance().getPlayer().addDice(item.getDice());
+			this.setMoney(this.getMoney() - item.getCost());
+			return true;
 		}
+		return false;
 	}
 }
