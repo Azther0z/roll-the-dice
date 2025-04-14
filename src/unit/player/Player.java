@@ -118,13 +118,14 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 	@Override
 	public int takeDamage(int damage) {
 		int dealt = damage;
-		if (dealt <= defVal) {
-			return 0;
-		}
 		dealt -= defVal;
 		if (dealt > this.getHp()) {
 			dealt = this.getHp();
 		}
+		if (dealt < 0) {
+			dealt = 0;
+		}
+		this.setDefVal(this.getDefVal() - damage);
 		this.setHp(this.getHp() - dealt);
 		return dealt;
 	}
