@@ -1,5 +1,7 @@
 package node;
 
+import gui.SceneManager;
+
 public class ShopNode extends Node {
 
 	public ShopNode(int row, int col) {
@@ -9,8 +11,7 @@ public class ShopNode extends Node {
 
 	@Override
 	public void executeNode() {
-		// TODO Auto-generated method stub
-
+		SceneManager.getInstance().getMapMenu().initializeShopMenu();
 	}
 
 }
