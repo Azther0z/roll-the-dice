@@ -1,12 +1,10 @@
 package node;
 
-import java.util.Objects;
-
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import utils.GameLogic;
 
-public abstract class Node extends Pane{
+public abstract class Node extends VBox {
 	private final int row;
 	private final int col;
 
@@ -15,8 +13,12 @@ public abstract class Node extends Pane{
 		this.row = row;
 		this.col = col;
 		this.getChildren().add(new Text(text));
-		this.setOnMouseClicked(e ->{
+		this.setOnMouseClicked(e -> {
+			if (!validNodeChosen()) {
+				return;
+			}
 			GameLogic.getInstance().setCurrentNode(this);
+			this.getChildren().add(new Text("Selected"));
 			executeNode();
 		});
 	}
@@ -29,9 +31,18 @@ public abstract class Node extends Pane{
 		return col;
 	}
 
-//	abstract public void displayNode();
-	// TODO wtf is this method
-
+	private boolean validNodeChosen() {
+		if (GameLogic.getInstance().getCurrentNode() == null && this.row==0) {
+			return true;
+		}
+		for (Edge edge : GameLogic.getInstance().getEdgeList()) {
+			if (edge.getFrom().equals(GameLogic.getInstance().getCurrentNode()) && edge.getTo().equals(this)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	abstract public void executeNode();
 
 }
