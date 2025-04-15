@@ -2,6 +2,7 @@ package utils;
 
 import java.util.ArrayList;
 
+import dice.DivideDice;
 import unit.base.Attackable;
 import unit.base.BaseUnit;
 import unit.base.Defendable;
@@ -62,6 +63,9 @@ public class FightLogic {
 		GameLogic.getInstance().getPlayer().rollDice();
 		GameLogic.getInstance().getPlayer().setAllDiceAcionType(ActionType.ATTACK);
 		GameLogic.getInstance().getPlayer().setAtkTarget(enemyList.get(0));
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			divDice.setDivTarget(enemyList.get(0));
+		}
 	}
 
 	public void updateTurn() {
@@ -120,11 +124,10 @@ public class FightLogic {
 	}
 
 	private void addRandomEnemy() {
-		int amount = (int) Math.round(2 + 3 * Math.random());
-		System.out.println("Amount:" + amount);
+		int amount = (int) Math
+				.round(GameConfig.MIN_UNIT + (GameConfig.MAX_UNIT - GameConfig.MIN_UNIT) * Math.random());
 		for (int i = 0; i < amount; i++) {
 			int monster = (int) Math.round(4 * Math.random());
-			System.out.println("Monster:" + monster);
 			if (monster == 0) {
 				this.enemyList.add(
 						new Attacker(UnitConfig.ATTACKER.maxHp, UnitConfig.ATTACKER.name, UnitConfig.ATTACKER.atkBase));
