@@ -8,6 +8,5 @@ public class MultiplyDice extends Dice {
 
 	public int multiply(int val) {
 		return this.getRollVal() * val;
-		// TODO need new design
 	}
 }
