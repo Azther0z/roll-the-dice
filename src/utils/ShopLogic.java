@@ -3,6 +3,9 @@ package utils;
 import java.util.ArrayList;
 
 import dice.Dice;
+import dice.DivideDice;
+import dice.MultiplyDice;
+import utils.DiceConfig;
 
 public class ShopLogic {
 
@@ -17,9 +20,21 @@ public class ShopLogic {
 		for (Dice dice : GameLogic.getInstance().getPlayer().getDiceList()) {
 			this.setMoney(this.getMoney() + dice.getRollVal());
 		}
-		// TODO randomly add dice
-		for (int i = 0; i < 4; i++) {
-			shopList.add(new ShopItem(new Dice(1, 6), 5));
+		generateDice();
+	}
+
+	private void generateDice() {
+		ArrayList<DiceConfig> diceConfigList = DiceConfig.getDiceConfigList();
+		for (int i = 0; i < GameConfig.SHOP_DICE_AMOUNT; i++) {
+			int index = (int) Math.round(Math.random() * (diceConfigList.size() - 1));
+			DiceConfig diceConfig = diceConfigList.get(index);
+			if (diceConfig.type == DiceType.NORMAL) {
+				shopList.add(new ShopItem(new Dice(diceConfig.minVal, diceConfig.maxVal), diceConfig.cost));
+			} else if (diceConfig.type == DiceType.MULTIPLY) {
+				shopList.add(new ShopItem(new MultiplyDice(diceConfig.minVal, diceConfig.maxVal), diceConfig.cost));
+			} else if (diceConfig.type == DiceType.DIVIDE) {
+				shopList.add(new ShopItem(new DivideDice(diceConfig.minVal, diceConfig.maxVal), diceConfig.cost));
+			}
 		}
 	}
 
