@@ -1,5 +1,6 @@
 package unit.monster;
 
+import dice.DivideDice;
 import unit.base.Attackable;
 import unit.base.BaseUnit;
 import unit.base.Defendable;
@@ -50,8 +51,12 @@ public class Hybrid extends BaseUnit implements Attackable, Defendable {
 
 	@Override
 	public void updateDefend() {
-		// TODO Auto-generated method stub
-
+		this.setDefVal(this.defBase);
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
+				this.setDefVal(divDice.divide(this.getDefVal()));
+			}
+		}
 	}
 
 	@Override

@@ -1,12 +1,15 @@
 package unit.monster;
 
+import dice.DivideDice;
 import unit.base.BaseUnit;
 import unit.base.Healable;
 import utils.FightLogic;
+import utils.GameLogic;
 
 public class Healer extends BaseUnit implements Healable {
 	private final int healBase;
 	private int healVal;
+	private BaseUnit healTarget;
 
 	public Healer(int maxHp, String name, int healBase) {
 		super(maxHp, name);
@@ -15,6 +18,7 @@ public class Healer extends BaseUnit implements Healable {
 		}
 		this.healBase = healBase;
 		this.setHealVal(healBase);
+		this.setHealTarget(this);
 	}
 
 	@Override
@@ -32,21 +36,32 @@ public class Healer extends BaseUnit implements Healable {
 		this.healVal = healVal;
 	}
 
+	public BaseUnit getHealTarget() {
+		return healTarget;
+	}
+
+	public void setHealTarget(BaseUnit healTarget) {
+		this.healTarget = healTarget;
+	}
+
 	@Override
 	public void updateHeal() {
-		// TODO Auto-generated method stub
-
+		this.setHealVal(healBase);
+		for (BaseUnit enemy : FightLogic.getInstance().getEnemyList()) {
+			if (enemy.getHp() < healTarget.getHp() && !enemy.equals(healTarget)) {
+				this.setHealTarget(enemy);
+			}
+		}
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
+				this.setHealVal(divDice.divide(this.getHealVal()));
+			}
+		}
 	}
 
 	@Override
 	public void executeHeal() {
-		BaseUnit healTarget = this;
-		for (BaseUnit enemy : FightLogic.getInstance().getEnemyList()) {
-			if (enemy.getHp() <= healTarget.getHp() && !enemy.equals(healTarget)) {
-				healTarget = enemy;
-			}
-		}
-		healTarget.setHp(healTarget.getHp()+this.getHealVal());
+		healTarget.setHp(healTarget.getHp() + this.getHealVal());
 	}
 
 	@Override

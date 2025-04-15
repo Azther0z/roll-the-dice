@@ -1,5 +1,6 @@
 package unit.monster;
 
+import dice.DivideDice;
 import unit.base.Attackable;
 import unit.base.BaseUnit;
 import utils.GameLogic;
@@ -34,7 +35,12 @@ public class Attacker extends BaseUnit implements Attackable {
 
 	@Override
 	public void updateAttack() {
-		// TODO Auto-generated method stub
+		this.setAtkVal(atkBase);
+		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if(divDice.getDivTarget().equals(this)) {
+				this.setAtkVal(divDice.divide(this.getAtkVal()));
+			}
+		}
 	}
 
 	@Override

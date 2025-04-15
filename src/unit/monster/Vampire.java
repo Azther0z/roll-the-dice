@@ -1,5 +1,6 @@
 package unit.monster;
 
+import dice.DivideDice;
 import unit.base.Attackable;
 import unit.base.BaseUnit;
 import unit.base.Healable;
@@ -50,7 +51,9 @@ public class Vampire extends BaseUnit implements Attackable, Healable {
 
 	@Override
 	public void updateHeal() {
-		// TODO Auto-generated method stub
+		// There is nothing to do here. 
+		// Vampire cannot reveal its healVal.
+		// As it can only know its healVal when it's attacking.
 	}
 
 	@Override
@@ -60,8 +63,12 @@ public class Vampire extends BaseUnit implements Attackable, Healable {
 
 	@Override
 	public void updateAttack() {
-		// TODO Auto-generated method stub
-
+		this.setAtkVal(atkBase);
+		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if(divDice.getDivTarget().equals(this)) {
+				this.setAtkVal(divDice.divide(this.getAtkVal()));
+			}
+		}
 	}
 
 	@Override

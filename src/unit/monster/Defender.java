@@ -1,7 +1,9 @@
 package unit.monster;
 
+import dice.DivideDice;
 import unit.base.BaseUnit;
 import unit.base.Defendable;
+import utils.GameLogic;
 
 public class Defender extends BaseUnit implements Defendable {
 	private final int defBase;
@@ -33,8 +35,12 @@ public class Defender extends BaseUnit implements Defendable {
 
 	@Override
 	public void updateDefend() {
-		// TODO Auto-generated method stub
-
+		this.setDefVal(this.defBase);
+		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if(divDice.getDivTarget().equals(this)) {
+				this.setDefVal(divDice.divide(this.getDefVal()));
+			}
+		}
 	}
 
 	@Override

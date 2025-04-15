@@ -1,5 +1,6 @@
 package unit.monster;
 
+import dice.DivideDice;
 import unit.base.Attackable;
 import unit.base.BaseUnit;
 import unit.base.Defendable;
@@ -122,11 +123,21 @@ public class Boss extends BaseUnit implements Attackable, Defendable, Healable {
 	@Override
 	public void updateDefend() {
 		this.setDefVal(this.calculateDefBase());
+		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if(divDice.getDivTarget().equals(this)) {
+				this.setDefVal(divDice.divide(this.getDefVal()));
+			}
+		}
 	}
 
 	@Override
 	public void updateAttack() {
 		this.setAtkVal(this.calculateAtkBase());
+		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if(divDice.getDivTarget().equals(this)) {
+				this.setAtkVal(divDice.divide(this.getAtkVal()));
+			}
+		}
 	}
 
 	@Override
