@@ -1,5 +1,7 @@
 package node;
 
+import gui.MapMenu;
+import gui.SceneManager;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import utils.GameLogic;
@@ -7,19 +9,23 @@ import utils.GameLogic;
 public abstract class Node extends VBox {
 	private final int row;
 	private final int col;
+	private Text status;
 
 	public Node(int row, int col, String text) {
 		super();
 		this.row = row;
 		this.col = col;
 		this.getChildren().add(new Text(text));
+		this.status = new Text();
+		this.getChildren().add(status);
 		this.setOnMouseClicked(e -> {
 			if (!validNodeChosen()) {
 				return;
 			}
 			GameLogic.getInstance().setCurrentNode(this);
-			this.getChildren().add(new Text("Selected"));
+			this.updateStatus();
 			executeNode();
+			SceneManager.getInstance().getMapMenu().updateMap();
 		});
 	}
 
@@ -31,8 +37,20 @@ public abstract class Node extends VBox {
 		return col;
 	}
 
-	private boolean validNodeChosen() {
-		if (GameLogic.getInstance().getCurrentNode() == null && this.row==0) {
+	public void updateStatus() {
+		if (!this.status.getText().equals("Selected")) {
+			this.status.setText("");
+		}
+		if (this.equals(GameLogic.getInstance().getCurrentNode())) {
+			this.status.setText("Selected");
+		}
+		if (validNodeChosen()) {
+			this.status.setText("Available");
+		}
+	}
+
+	public boolean validNodeChosen() {
+		if (GameLogic.getInstance().getCurrentNode() == null && this.row == 0) {
 			return true;
 		}
 		for (Edge edge : GameLogic.getInstance().getEdgeList()) {
@@ -42,7 +60,7 @@ public abstract class Node extends VBox {
 		}
 		return false;
 	}
-	
+
 	abstract public void executeNode();
 
 }
