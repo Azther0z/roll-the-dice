@@ -3,6 +3,8 @@ package unit.player;
 import java.util.ArrayList;
 
 import dice.Dice;
+import dice.DivideDice;
+import dice.MultiplyDice;
 import unit.base.Attackable;
 import unit.base.BaseUnit;
 import unit.base.Defendable;
@@ -11,6 +13,7 @@ import utils.ActionType;
 
 public class Player extends BaseUnit implements Attackable, Defendable, Healable {
 	private ArrayList<Dice> diceList;
+	private ArrayList<DivideDice> divDiceList;
 	private BaseUnit atkTarget;
 	private BaseUnit divTarget;
 	private int atkVal;
@@ -19,7 +22,8 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 
 	public Player(int maxHp, String name) {
 		super(maxHp, name);
-		this.diceList = new ArrayList<Dice>();
+		this.setDiceList(new ArrayList<Dice>());
+		this.setDivDiceList(new ArrayList<DivideDice>());
 		this.setAtkVal(0);
 		this.setDefVal(0);
 		this.setAtkTarget(null);
@@ -28,6 +32,18 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 
 	public ArrayList<Dice> getDiceList() {
 		return diceList;
+	}
+
+	public void setDiceList(ArrayList<Dice> diceList) {
+		this.diceList = diceList;
+	}
+
+	public ArrayList<DivideDice> getDivDiceList() {
+		return divDiceList;
+	}
+
+	public void setDivDiceList(ArrayList<DivideDice> divDiceList) {
+		this.divDiceList = divDiceList;
 	}
 
 	public BaseUnit getAtkTarget() {
@@ -95,19 +111,39 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 	@Override
 	public void updateDefend() {
 		this.setDefVal(0);
+		int mult = 1;
 		for (Dice dice : this.getDiceList()) {
-			if (dice.getActionType() == ActionType.DEFEND)
+			if (dice.getActionType() == ActionType.DEFEND) {
+				if (dice instanceof MultiplyDice) {
+					mult = ((MultiplyDice) dice).multiply(mult);
+					continue;
+				}
+				if (dice instanceof DivideDice) {
+					continue;
+				}
 				this.setDefVal(this.getDefVal() + dice.getRollVal());
+			}
 		}
+		this.setDefVal(this.getDefVal() * mult);
 	}
 
 	@Override
 	public void updateAttack() {
 		this.setAtkVal(0);
+		int mult = 1;
 		for (Dice dice : this.getDiceList()) {
-			if (dice.getActionType() == ActionType.ATTACK)
+			if (dice.getActionType() == ActionType.ATTACK) {
+				if (dice instanceof MultiplyDice) {
+					mult = ((MultiplyDice) dice).multiply(mult);
+					continue;
+				}
+				if (dice instanceof DivideDice) {
+					continue;
+				}
 				this.setAtkVal(this.getAtkVal() + dice.getRollVal());
+			}
 		}
+		this.setAtkVal(this.getAtkVal() * mult);
 	}
 
 	@Override
@@ -132,6 +168,9 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 
 	public void addDice(Dice dice) {
 		this.getDiceList().add(dice);
+		if(dice instanceof DivideDice) {
+			this.getDivDiceList().add((DivideDice) dice);
+		}
 	}
 
 	public void rollDice() {
