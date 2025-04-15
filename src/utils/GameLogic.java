@@ -104,13 +104,7 @@ public class GameLogic {
 		this.setDefeated(false);
 		this.setWin(false);
 		this.setPlayer(new Player(UnitConfig.PLAYER.maxHp, UnitConfig.PLAYER.name));
-		// TODO starter dice
-		this.getPlayer().addDice(new Dice(1, 6));
-		this.getPlayer().addDice(new Dice(1, 4));
-		this.getPlayer().addDice(new Dice(1, 12));
-		this.getPlayer().addDice(new Dice(1, 20));
-		this.getPlayer().addDice(new MultiplyDice(1, 6));
-		this.getPlayer().addDice(new DivideDice(1, 4));
+		starterDice();
 		generateMap();
 	}
 
@@ -122,14 +116,18 @@ public class GameLogic {
 	}
 
 	private void generateMap() {
-		// TODO randomly create map
 		edgeList = new ArrayList<Edge>();
 		nodeGrid = new ArrayList<ArrayList<Node>>();
 		for (int i = 0; i < GameConfig.MAX_ROW; i++) {
 			nodeGrid.add(new ArrayList<Node>());
 			for (int j = 0; j < GameConfig.MAX_COL; j++) {
-				if (i == 2) {
-					nodeGrid.get(i).add(new ShopNode(i, j));
+				if (i % 3 == 0 && i != 0 && i != GameConfig.MAX_ROW - 1) {
+					int index = (int) Math.round(Math.random());
+					if (index == 0) {
+						nodeGrid.get(i).add(new ShopNode(i, j));
+					} else if (index == 1) {
+						nodeGrid.get(i).add(new RestNode(i, j));
+					}
 					continue;
 				}
 				if (i == GameConfig.MAX_ROW - 1) {
@@ -142,13 +140,25 @@ public class GameLogic {
 		for (int i = 0; i < GameConfig.MAX_ROW - 1; i++) {
 			for (int j = 0; j < GameConfig.MAX_COL; j++) {
 				edgeList.add(new Edge(nodeGrid.get(i).get(j), nodeGrid.get(i + 1).get(j)));
-
+				int index = (int) Math.round(Math.random() * 2);
+				if (index == 1 && j > 0) {
+					edgeList.add(new Edge(nodeGrid.get(i).get(j), nodeGrid.get(i + 1).get(j - 1)));
+				} else if (index == 2 && j < GameConfig.MAX_COL - 1) {
+					edgeList.add(new Edge(nodeGrid.get(i).get(j), nodeGrid.get(i + 1).get(j + 1)));
+				}
 			}
 		}
 		bossNode = new BossNode(GameConfig.MAX_ROW, 0);
 		for (int j = 0; j < GameConfig.MAX_COL; j++) {
 			edgeList.add(new Edge(nodeGrid.get(GameConfig.MAX_ROW - 1).get(j), bossNode));
 		}
+	}
+
+	private void starterDice() {
+		this.getPlayer().addDice(new Dice(DiceConfig.D4NORM.minVal, DiceConfig.D4NORM.maxVal));
+		this.getPlayer().addDice(new Dice(DiceConfig.D6NORM.minVal, DiceConfig.D6NORM.maxVal));
+		this.getPlayer().addDice(new MultiplyDice(DiceConfig.D4MULT.minVal, DiceConfig.D4MULT.maxVal));
+		this.getPlayer().addDice(new DivideDice(DiceConfig.D4DIV.minVal, DiceConfig.D4DIV.maxVal));
 	}
 
 }
