@@ -1,36 +1,35 @@
 package gui;
 
-import dice.Dice;
-import javafx.collections.ObservableList;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 import node.Edge;
 import node.Node;
 import utils.GameConfig;
 import utils.GameLogic;
+import utils.GuiUtils;
 
 public class MapMenu extends StackPane {
 	private Pane nodePane;
 	private Pane edgePane;
 
 	public MapMenu() {
-		nodePane = new Pane();
-		this.getChildren().add(nodePane);
 		edgePane = new Pane();
 		this.getChildren().add(edgePane);
+		nodePane = new Pane();
+		this.getChildren().add(nodePane);
 		updateMap();
+		this.setPadding(new Insets(GameConfig.MAP_MENU_VPADDING, GameConfig.MAP_MENU_HPADDING,
+				GameConfig.MAP_MENU_VPADDING, GameConfig.MAP_MENU_HPADDING));
 	}
-	
+
 	public void updateMap() {
 		initializeNodePane();
 		initializeEdgePane();
@@ -38,18 +37,30 @@ public class MapMenu extends StackPane {
 
 	private void initializeNodePane() {
 		nodePane.getChildren().clear();
+		double totalGridWidth = GameConfig.MAX_COL * GameConfig.MAP_MENU_NODE_WIDTH
+				+ (GameConfig.MAX_COL - 1) * GameConfig.MAP_MENU_NODE_HGAP;
+		double totalGridHeight = GameConfig.MAX_ROW * GameConfig.MAP_MENU_NODE_HEIGHT
+				+ (GameConfig.MAX_ROW - 1) * GameConfig.MAP_MENU_NODE_VGAP;
+		double startX = (GameConfig.SCREEN_WIDTH - totalGridWidth) / 2;
+		double startY = (GameConfig.SCREEN_HEIGHT - totalGridHeight) / 2;
 		for (int i = 0; i < GameConfig.MAX_ROW; i++) {
 			for (int j = 0; j < GameConfig.MAX_COL; j++) {
 				Node node = GameLogic.getInstance().getNodeGrid().get(i).get(j);
-				node.setLayoutX(100 + j * 50);
-				node.setLayoutY(100 + i * 50);
+				double xPos = startX + j * (GameConfig.MAP_MENU_NODE_WIDTH + GameConfig.MAP_MENU_NODE_HGAP);
+				double yPos = startY + i * (GameConfig.MAP_MENU_NODE_HEIGHT + GameConfig.MAP_MENU_NODE_VGAP);
+
+				node.setPrefSize(GameConfig.MAP_MENU_NODE_WIDTH, GameConfig.MAP_MENU_NODE_HEIGHT);
+				GuiUtils.setLayout(node, xPos, yPos);
+				node.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
 				node.updateStatus();
 				nodePane.getChildren().add(node);
 			}
 		}
 		Node bossNode = GameLogic.getInstance().getBossNode();
-		bossNode.setLayoutX(100 + GameConfig.MAX_COL * 50);
-		bossNode.setLayoutY(100 + GameConfig.MAX_ROW * 50);
+		GuiUtils.setLayout(bossNode, (GameConfig.SCREEN_WIDTH - GameConfig.MAP_MENU_BOSS_WIDTH) / 2,
+				startY + totalGridHeight + GameConfig.MAP_MENU_BOSS_VGAP);
+		bossNode.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
+		bossNode.setPrefSize(GameConfig.MAP_MENU_BOSS_WIDTH, GameConfig.MAP_MENU_BOSS_HEIGHT);
 		bossNode.updateStatus();
 		nodePane.getChildren().add(bossNode);
 	}
@@ -58,19 +69,25 @@ public class MapMenu extends StackPane {
 		edgePane.getChildren().clear();
 		edgePane.setPickOnBounds(false);
 		for (Edge edge : GameLogic.getInstance().getEdgeList()) {
-			Line line = new Line(edge.getFrom().getLayoutX(), edge.getFrom().getLayoutY(), edge.getTo().getLayoutX(),
-					edge.getTo().getLayoutY());
+			Line line = new Line(edge.getFrom().getLayoutX() + edge.getFrom().getPrefWidth() / 2,
+					edge.getFrom().getLayoutY() + edge.getFrom().getPrefHeight() / 2,
+					edge.getTo().getLayoutX() + edge.getTo().getPrefWidth() / 2,
+					edge.getTo().getLayoutY() + edge.getTo().getPrefHeight() / 2);
 			line.setStroke(Color.GRAY);
 			line.setStrokeWidth(2);
 			edgePane.getChildren().add(line);
 		}
 	}
 
-	public Button createContinueButton() {
-		Button continueButton = new Button("Continue");
+	public VBox createContinueButton() {
+		VBox continueButton = new VBox();
+		continueButton.getChildren().add(GuiUtils.createText("Continue", GameConfig.FONT_SIZE_MEDIUM));
 		continueButton.setOnMouseClicked(e -> {
 			this.getChildren().removeLast();
 		});
+		continueButton.setAlignment(Pos.CENTER);
+		continueButton.setMaxSize(GameConfig.MAP_MENU_CONTINUEBUTTON_WIDTH, GameConfig.MAP_MENU_CONTINUEBUTTON_HEIGHT);
+		continueButton.setBackground(new Background(new BackgroundFill(Color.CORAL, CornerRadii.EMPTY, Insets.EMPTY)));
 		return continueButton;
 	}
 

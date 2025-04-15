@@ -1,26 +1,41 @@
 package gui;
 
 import dice.Dice;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import utils.GameConfig;
 import utils.GameLogic;
+import utils.GuiUtils;
 import utils.ShopItem;
 import utils.ShopLogic;
 
-public class ShopMenu extends HBox {
+public class ShopMenu extends VBox {
 	private VBox dicePane;
 	private Text moneyText;
 	private VBox shopPane;
+	private HBox shopBox;
 	private ShopLogic shopLogic;
 
 	public ShopMenu() {
+		shopBox = new HBox();
 		shopLogic = new ShopLogic();
 		initializeDicePane();
 		initializeShopPane();
-		this.getChildren().addAll(dicePane, shopPane);
+		shopBox.getChildren().addAll(dicePane, shopPane);
+		shopBox.setAlignment(Pos.CENTER);
+		this.getChildren().add(shopBox);
 		this.getChildren().add(SceneManager.getInstance().getMapMenu().createContinueButton());
+		this.setAlignment(Pos.CENTER);
+		this.setMaxSize(GameConfig.STACK_MAP_MENU_WIDTH,GameConfig.STACK_MAP_MENU_HEIGHT);
+		this.setBackground(new Background(new BackgroundFill(Color.GRAY,CornerRadii.EMPTY,Insets.EMPTY)));
 	}
 
 	private void updateMoney() {
@@ -34,10 +49,12 @@ public class ShopMenu extends HBox {
 			diceBox.getChildren()
 					.add(new Text("[" + dice.getMinVal() + ", " + dice.getMaxVal() + "] : " + dice.getRollVal()));
 			diceBox.getChildren().add(new Text("" + dice.getImagePath()));
+			diceBox.setAlignment(Pos.CENTER);
 			dicePane.getChildren().add(diceBox);
 		}
-		moneyText = new Text();
+		moneyText = GuiUtils.createText("", GameConfig.FONT_SIZE_MEDIUM);
 		dicePane.getChildren().add(moneyText);
+		dicePane.setAlignment(Pos.CENTER);
 		updateMoney();
 	}
 
@@ -58,8 +75,10 @@ public class ShopMenu extends HBox {
 				}
 			});
 			itemBox.getChildren().add(buyButton);
+			itemBox.setAlignment(Pos.CENTER);
 			shopPane.getChildren().add(itemBox);
 		}
+		shopPane.setAlignment(Pos.CENTER);
 	}
 
 }

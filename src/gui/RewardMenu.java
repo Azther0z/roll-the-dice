@@ -1,10 +1,17 @@
 package gui;
 
 import dice.Dice;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import utils.GameConfig;
 import utils.GameLogic;
 
 public class RewardMenu extends VBox {
@@ -26,9 +33,13 @@ public class RewardMenu extends VBox {
 			});
 			diceBox.getChildren().add(upgradeMinButton);
 			diceBox.getChildren().add(upgradeMaxButton);
+			diceBox.setAlignment(Pos.CENTER);
 			this.getChildren().add(diceBox);
 		}
 		this.getChildren().add(SceneManager.getInstance().getMapMenu().createContinueButton());
+		this.setAlignment(Pos.CENTER);
+		this.setMaxSize(GameConfig.STACK_MAP_MENU_WIDTH,GameConfig.STACK_MAP_MENU_HEIGHT);
+		this.setBackground(new Background(new BackgroundFill(Color.GRAY,CornerRadii.EMPTY,Insets.EMPTY)));
 	}
 
 	private void upgradeMin(Dice dice) {

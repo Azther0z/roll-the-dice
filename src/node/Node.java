@@ -1,7 +1,7 @@
 package node;
 
-import gui.MapMenu;
 import gui.SceneManager;
+import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import utils.GameLogic;
@@ -18,6 +18,7 @@ public abstract class Node extends VBox {
 		this.getChildren().add(new Text(text));
 		this.status = new Text();
 		this.getChildren().add(status);
+		this.setAlignment(Pos.CENTER);
 		this.setOnMouseClicked(e -> {
 			if (!validNodeChosen()) {
 				return;

@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import utils.FightLogic;
+import utils.GameConfig;
 import utils.GameLogic;
 
 public class SceneManager {
@@ -34,7 +35,7 @@ public class SceneManager {
 	public void newScene() {
 		resetGame();
 		root = new BorderPane();
-		root.setPrefSize(800, 600);
+		root.setPrefSize(GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT);
 		scene = new Scene(root);
 		root.setCenter(mainMenu);
 	}
@@ -45,6 +46,7 @@ public class SceneManager {
 		mapMenu = new MapMenu();
 		scrollPane = new ScrollPane();
 		scrollPane.setContent(mapMenu);
+		scrollPane.setFitToWidth(true);
 		fightScene = null;
 	}
 

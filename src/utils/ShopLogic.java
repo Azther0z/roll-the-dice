@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import dice.Dice;
 import dice.DivideDice;
 import dice.MultiplyDice;
-import utils.DiceConfig;
 
 public class ShopLogic {
 

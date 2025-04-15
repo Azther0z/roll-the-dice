@@ -4,8 +4,8 @@ import dice.Dice;
 import dice.DivideDice;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import unit.base.Attackable;
@@ -13,9 +13,11 @@ import unit.base.BaseUnit;
 import unit.base.Defendable;
 import unit.base.Healable;
 import utils.FightLogic;
+import utils.GameConfig;
 import utils.GameLogic;
+import utils.GuiUtils;
 
-public class FightScene extends GridPane {
+public class FightScene extends Pane {
 	private VBox playerPane;
 	private VBox dicePane;
 	private HBox enemiesPane;
@@ -27,7 +29,8 @@ public class FightScene extends GridPane {
 		initializeDicePane();
 		initializeEnemyPane();
 		endTurnButton = new Button("End turn");
-		endTurnButton.setAlignment(Pos.CENTER);
+		GuiUtils.setLayout(endTurnButton, GameConfig.FIGHT_SCENE_ENDBUTTON_X, GameConfig.FIGHT_SCENE_ENDBUTTON_Y);
+		endTurnButton.setPrefSize(GameConfig.FIGHT_SCENE_ENDBUTTON_WIDTH, GameConfig.FIGHT_SCENE_ENDBUTTON_HEIGHT);
 		endTurnButton.setOnMouseClicked(e -> {
 			FightLogic.getInstance().endTurn();
 			updateFightScene();
@@ -44,47 +47,53 @@ public class FightScene extends GridPane {
 				SceneManager.getInstance().goToMap();
 			}
 		});
-		this.add(playerPane, 0, 0);
-		this.add(dicePane, 1, 0);
-		this.add(enemiesPane, 2, 0);
-		this.add(endTurnButton, 3, 0);
+		this.getChildren().addAll(playerPane, dicePane, enemiesPane, endTurnButton);
 	}
 
 	private void initializePlayerPane() {
 		playerPane = new VBox();
 		playerPane.setAlignment(Pos.CENTER);
+		GuiUtils.setLayout(playerPane, GameConfig.FIGHT_SCENE_PLAYER_X, GameConfig.FIGHT_SCENE_PLAYER_Y);
+		playerPane.setAlignment(Pos.CENTER_LEFT);
 		updatePlayerPane();
 	}
 
 	private void initializeDicePane() {
 		dicePane = new VBox();
 		dicePane.setAlignment(Pos.CENTER);
+		GuiUtils.setLayout(dicePane,GameConfig.FIGHT_SCENE_DICE_X,GameConfig.FIGHT_SCENE_DICE_Y);
 		updateDicePane();
 	}
 
 	private void initializeEnemyPane() {
 		enemiesPane = new HBox();
 		enemiesPane.setAlignment(Pos.CENTER);
+		GuiUtils.setLayout(enemiesPane,GameConfig.FIGHT_SCENE_ENEMY_X,GameConfig.FIGHT_SCENE_ENEMY_Y);
 		updateEnemiesPane();
 	}
 
 	private void updatePlayerPane() {
 		playerPane.getChildren().clear();
 		playerPane.getChildren().add(new Text(GameLogic.getInstance().getPlayer().getName()));
-		playerPane.getChildren().add(new Text("HP: " + GameLogic.getInstance().getPlayer().getHp()));
-		playerPane.getChildren().add(new Text("ATK: " + GameLogic.getInstance().getPlayer().getAtkVal()));
-		playerPane.getChildren().add(new Text("DEF: " + GameLogic.getInstance().getPlayer().getDefVal()));
+		playerPane.getChildren().add(GuiUtils.createText("HP : " + GameLogic.getInstance().getPlayer().getHp(),
+				GameConfig.FONT_SIZE_MEDIUM));
+		playerPane.getChildren().add(GuiUtils.createText("ATK : " + GameLogic.getInstance().getPlayer().getAtkVal(),
+				GameConfig.FONT_SIZE_MEDIUM));
+		playerPane.getChildren().add(GuiUtils.createText("DEF : " + GameLogic.getInstance().getPlayer().getDefVal(),
+				GameConfig.FONT_SIZE_MEDIUM));
 	}
 
 	private void updateDicePane() {
 		dicePane.getChildren().clear();
 		for (Dice dice : GameLogic.getInstance().getPlayer().getDiceList()) {
-			if(dice instanceof DivideDice) {
+			if (dice instanceof DivideDice) {
 				continue;
 			}
 			HBox diceBox = new HBox();
 			diceBox.getChildren()
-					.add(new Text("[" + dice.getMinVal() + ", " + dice.getMaxVal() + "] : " + dice.getRollVal()));
+					.add(GuiUtils.createText(
+							"[" + dice.getMinVal() + ", " + dice.getMaxVal() + "] : " + dice.getRollVal(),
+							GameConfig.FONT_SIZE_MEDIUM));
 			diceBox.getChildren().add(new Text("" + dice.getActionType()));
 			diceBox.getChildren().add(new Text("" + dice.getImagePath()));
 			diceBox.setOnMouseClicked(e -> {
@@ -103,13 +112,16 @@ public class FightScene extends GridPane {
 			enemyPane.getChildren().add(new Text(enemy.getName()));
 			enemyPane.getChildren().add(new Text("HP: " + enemy.getHp()));
 			if (enemy instanceof Attackable) {
-				enemyPane.getChildren().add(new Text("ATK: " + ((Attackable) enemy).getAtkVal()));
+				enemyPane.getChildren().add(
+						GuiUtils.createText("ATK: " + ((Attackable) enemy).getAtkVal(), GameConfig.FONT_SIZE_MEDIUM));
 			}
 			if (enemy instanceof Defendable) {
-				enemyPane.getChildren().add(new Text("DEF: " + ((Defendable) enemy).getDefVal()));
+				enemyPane.getChildren().add(
+						GuiUtils.createText("DEF: " + ((Defendable) enemy).getDefVal(), GameConfig.FONT_SIZE_MEDIUM));
 			}
 			if (enemy instanceof Healable) {
-				enemyPane.getChildren().add(new Text("HEAL: " + ((Healable) enemy).getHealVal()));
+				enemyPane.getChildren().add(
+						GuiUtils.createText("HEAL: " + ((Healable) enemy).getHealVal(), GameConfig.FONT_SIZE_MEDIUM));
 			}
 			enemyPane.getChildren().add(createAtkTargetButton(enemy));
 			for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
@@ -121,7 +133,8 @@ public class FightScene extends GridPane {
 
 	private VBox createAtkTargetButton(BaseUnit enemy) {
 		VBox atkTargetButton = new VBox();
-		Text atkText = new Text("Attack : " + GameLogic.getInstance().getPlayer().getAtkVal());
+		Text atkText = GuiUtils.createText("Attack : " + GameLogic.getInstance().getPlayer().getAtkVal(),
+				GameConfig.FONT_SIZE_SMALL);
 		atkTargetButton.setOnMouseClicked(e -> {
 			GameLogic.getInstance().getPlayer().setAtkTarget(enemy);
 			updateFightScene();
@@ -136,7 +149,7 @@ public class FightScene extends GridPane {
 
 	private VBox createDivTargetButton(DivideDice divDice, BaseUnit enemy) {
 		VBox divTargetButton = new VBox();
-		Text divText = new Text("Divide : " + divDice.getRollVal());
+		Text divText = GuiUtils.createText("Divide : " + divDice.getRollVal(), GameConfig.FONT_SIZE_SMALL);
 		divTargetButton.setOnMouseClicked(e -> {
 			divDice.setDivTarget(enemy);
 			updateFightScene();

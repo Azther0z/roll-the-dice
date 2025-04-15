@@ -11,6 +11,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage.setScene(SceneManager.getInstance().getScene());
 		primaryStage.setTitle(GameConfig.PROJECT_NAME);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 
