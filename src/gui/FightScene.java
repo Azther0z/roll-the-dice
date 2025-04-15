@@ -1,6 +1,7 @@
 package gui;
 
 import dice.Dice;
+import dice.DivideDice;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
@@ -78,6 +79,9 @@ public class FightScene extends GridPane {
 	private void updateDicePane() {
 		dicePane.getChildren().clear();
 		for (Dice dice : GameLogic.getInstance().getPlayer().getDiceList()) {
+			if(dice instanceof DivideDice) {
+				continue;
+			}
 			HBox diceBox = new HBox();
 			diceBox.getChildren()
 					.add(new Text("[" + dice.getMinVal() + ", " + dice.getMaxVal() + "] : " + dice.getRollVal()));
@@ -107,15 +111,41 @@ public class FightScene extends GridPane {
 			if (enemy instanceof Healable) {
 				enemyPane.getChildren().add(new Text("HEAL: " + ((Healable) enemy).getHealVal()));
 			}
-			if (enemy.equals(GameLogic.getInstance().getPlayer().getAtkTarget())) {
-				enemyPane.getChildren().add(new Text("is target"));
+			enemyPane.getChildren().add(createAtkTargetButton(enemy));
+			for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+				enemyPane.getChildren().add(createDivTargetButton(divDice, enemy));
 			}
-			enemyPane.setOnMouseClicked(e -> {
-				GameLogic.getInstance().getPlayer().setAtkTarget(enemy);
-				updateFightScene();
-			});
 			enemiesPane.getChildren().add(enemyPane);
 		}
+	}
+
+	private VBox createAtkTargetButton(BaseUnit enemy) {
+		VBox atkTargetButton = new VBox();
+		Text atkText = new Text("Attack : " + GameLogic.getInstance().getPlayer().getAtkVal());
+		atkTargetButton.setOnMouseClicked(e -> {
+			GameLogic.getInstance().getPlayer().setAtkTarget(enemy);
+			updateFightScene();
+
+		});
+		atkTargetButton.getChildren().add(atkText);
+		if (enemy.equals(GameLogic.getInstance().getPlayer().getAtkTarget())) {
+			atkTargetButton.getChildren().add(new Text("is target"));
+		}
+		return atkTargetButton;
+	}
+
+	private VBox createDivTargetButton(DivideDice divDice, BaseUnit enemy) {
+		VBox divTargetButton = new VBox();
+		Text divText = new Text("Divide : " + divDice.getRollVal());
+		divTargetButton.setOnMouseClicked(e -> {
+			divDice.setDivTarget(enemy);
+			updateFightScene();
+		});
+		divTargetButton.getChildren().add(divText);
+		if (divDice.getDivTarget().equals(enemy)) {
+			divTargetButton.getChildren().add(new Text("is target"));
+		}
+		return divTargetButton;
 	}
 
 	public void updateFightScene() {
