@@ -1,6 +1,7 @@
 package gui;
 
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import utils.FightLogic;
 import utils.GameLogic;
@@ -10,6 +11,7 @@ public class SceneManager {
 	private Scene scene;
 	private BorderPane root;
 	private MainMenu mainMenu;
+	private ScrollPane scrollPane;
 	private MapMenu mapMenu;
 	private FightScene fightScene;
 
@@ -41,6 +43,8 @@ public class SceneManager {
 		GameLogic.getInstance().newGameLogic();
 		mainMenu = new MainMenu();
 		mapMenu = new MapMenu();
+		scrollPane = new ScrollPane();
+		scrollPane.setContent(mapMenu);
 		fightScene = null;
 	}
 
@@ -56,7 +60,7 @@ public class SceneManager {
 	}
 
 	public void goToMap() {
-		this.root.setCenter(mapMenu);
+		this.root.setCenter(scrollPane);
 	}
 
 	public void goToFight() {
