@@ -24,30 +24,38 @@ public class MapMenu extends StackPane {
 	private Pane edgePane;
 
 	public MapMenu() {
+		nodePane = new Pane();
+		this.getChildren().add(nodePane);
+		edgePane = new Pane();
+		this.getChildren().add(edgePane);
+		updateMap();
+	}
+	
+	public void updateMap() {
 		initializeNodePane();
 		initializeEdgePane();
 	}
 
 	private void initializeNodePane() {
-		nodePane = new Pane();
+		nodePane.getChildren().clear();
 		for (int i = 0; i < GameConfig.MAX_ROW; i++) {
 			for (int j = 0; j < GameConfig.MAX_COL; j++) {
 				Node node = GameLogic.getInstance().getNodeGrid().get(i).get(j);
-//				nodePane.add(node, j, i);
 				node.setLayoutX(100 + j * 50);
 				node.setLayoutY(100 + i * 50);
+				node.updateStatus();
 				nodePane.getChildren().add(node);
 			}
 		}
 		Node bossNode = GameLogic.getInstance().getBossNode();
 		bossNode.setLayoutX(100 + GameConfig.MAX_COL * 50);
 		bossNode.setLayoutY(100 + GameConfig.MAX_ROW * 50);
+		bossNode.updateStatus();
 		nodePane.getChildren().add(bossNode);
-		this.getChildren().add(nodePane);
 	}
 
 	private void initializeEdgePane() {
-		edgePane = new Pane();
+		edgePane.getChildren().clear();
 		edgePane.setPickOnBounds(false);
 		for (Edge edge : GameLogic.getInstance().getEdgeList()) {
 			Line line = new Line(edge.getFrom().getLayoutX(), edge.getFrom().getLayoutY(), edge.getTo().getLayoutX(),
@@ -56,7 +64,6 @@ public class MapMenu extends StackPane {
 			line.setStrokeWidth(2);
 			edgePane.getChildren().add(line);
 		}
-		this.getChildren().add(edgePane);
 	}
 
 	public Button createContinueButton() {
