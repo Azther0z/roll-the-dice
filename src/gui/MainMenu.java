@@ -18,13 +18,13 @@ public class MainMenu extends VBox {
 		gameText = new Text(GameConfig.PROJECT_NAME);
 		gameText.setFont(new Font(GameConfig.FONT_SIZE_BIG));
 		buttonBox = new VBox();
-		startButton = new Button("Start");
+		startButton = new Button("START");
 		startButton.setOnMouseClicked(e -> {
 			SceneManager.getInstance().goToMap();
 		});
 		startButton.setFont(new Font(GameConfig.FONT_SIZE_MEDIUM));
 		startButton.setPrefSize(GameConfig.MAIN_MENU_BUTTON_WIDTH, GameConfig.MAIN_MENU_BUTTON_HEIGHT);
-		exitButton = new Button("Exit");
+		exitButton = new Button("EXIT");
 		exitButton.setOnMouseClicked(e -> {
 			Platform.exit();
 		});

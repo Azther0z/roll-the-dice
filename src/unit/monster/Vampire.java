@@ -28,8 +28,7 @@ public class Vampire extends BaseUnit implements Attackable, Healable {
 	public void setAtkVal(int atkVal) {
 		if (atkVal > this.atkBase) {
 			atkVal = this.atkBase;
-		}
-		if (atkVal < 0) {
+		} else if (atkVal < 0) {
 			atkVal = 0;
 		}
 		this.atkVal = atkVal;
@@ -42,8 +41,7 @@ public class Vampire extends BaseUnit implements Attackable, Healable {
 	public void setHealVal(int healVal) {
 		if (healVal > this.atkBase) {
 			healVal = this.atkBase;
-		}
-		if (healVal < 0) {
+		} else if (healVal < 0) {
 			healVal = 0;
 		}
 		this.healVal = healVal;
@@ -51,9 +49,10 @@ public class Vampire extends BaseUnit implements Attackable, Healable {
 
 	@Override
 	public void updateHeal() {
-		// There is nothing to do here. 
-		// Vampire cannot reveal its healVal.
-		// As it can only know its healVal when it's attacking.
+		/*
+		 * There is nothing to do here because vampire can't reveal its healVal as its
+		 * healVal can only be known when it's attacking.
+		 */
 	}
 
 	@Override
@@ -64,8 +63,8 @@ public class Vampire extends BaseUnit implements Attackable, Healable {
 	@Override
 	public void updateAttack() {
 		this.setAtkVal(atkBase);
-		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
-			if(divDice.getDivTarget().equals(this)) {
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
 				this.setAtkVal(divDice.divide(this.getAtkVal()));
 			}
 		}

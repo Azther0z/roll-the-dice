@@ -12,12 +12,13 @@ public class GuiUtils {
 		display.setFont(new Font(size));
 		return display;
 	}
-	
-	public static void setLayout(Node node, int x,int y) {
+
+	public static void setLayout(Node node, int x, int y) {
 		node.setLayoutX(x);
 		node.setLayoutY(y);
 	}
-	public static void setLayout(Node node, double x,double y) {
+
+	public static void setLayout(Node node, double x, double y) {
 		node.setLayoutX(x);
 		node.setLayoutY(y);
 	}

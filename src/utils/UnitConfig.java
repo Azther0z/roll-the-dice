@@ -1,8 +1,8 @@
 package utils;
 
 public enum UnitConfig {
-	ATTACKER("Attacker", 20, 10, 0, 0), DEFENDER("Defender", 20, 0, 10, 0), HYBRID("Hybrid", 20, 0, 20, 0),
-	HEALER("Healer", 20, 0, 0, 10), VAMPIRE("Vampire", 20, 10, 0, 0), BOSS("Boss", 50, 10, 10, 0),
+	ATTACKER("Attacker", 20, 10, 0, 0), DEFENDER("Defender", 20, 0, 10, 0), HYBRID("Hybrid", 20, 0, 15, 0),
+	HEALER("Healer", 20, 0, 0, 10), VAMPIRE("Vampire", 20, 10, 0, 0), BOSS("Boss", 80, 20, 40, 0),
 	PLAYER("Player", 100, 0, 0, 0);
 
 	public final String name;

@@ -26,8 +26,7 @@ public class Attacker extends BaseUnit implements Attackable {
 	public void setAtkVal(int atkVal) {
 		if (atkVal > this.atkBase) {
 			atkVal = this.atkBase;
-		}
-		if (atkVal < 0) {
+		} else if (atkVal < 0) {
 			atkVal = 0;
 		}
 		this.atkVal = atkVal;
@@ -36,8 +35,8 @@ public class Attacker extends BaseUnit implements Attackable {
 	@Override
 	public void updateAttack() {
 		this.setAtkVal(atkBase);
-		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
-			if(divDice.getDivTarget().equals(this)) {
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
 				this.setAtkVal(divDice.divide(this.getAtkVal()));
 			}
 		}

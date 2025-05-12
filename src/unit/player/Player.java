@@ -92,15 +92,19 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 	}
 
 	public void setHealVal(int healVal) {
+		if (healVal < 0) {
+			healVal = 0;
+		}
 		this.healVal = healVal;
 	}
 
 	@Override
 	public void updateHeal() {
-		this.setHealVal(0);
+		int newHealVal = 0;
 		for (Dice dice : this.getDiceList()) {
-			this.setHealVal(this.getHealVal() + dice.getRollVal());
+			newHealVal += dice.getRollVal();
 		}
+		this.setHealVal(newHealVal);
 	}
 
 	@Override
@@ -110,40 +114,34 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 
 	@Override
 	public void updateDefend() {
-		this.setDefVal(0);
+		int newDefVal = 0;
 		int mult = 1;
 		for (Dice dice : this.getDiceList()) {
 			if (dice.getActionType() == ActionType.DEFEND) {
 				if (dice instanceof MultiplyDice) {
-					mult = ((MultiplyDice) dice).multiply(mult);
-					continue;
+					mult *= dice.getRollVal();
+				} else if (!(dice instanceof DivideDice)) {
+					newDefVal += dice.getRollVal();
 				}
-				if (dice instanceof DivideDice) {
-					continue;
-				}
-				this.setDefVal(this.getDefVal() + dice.getRollVal());
 			}
 		}
-		this.setDefVal(this.getDefVal() * mult);
+		this.setDefVal(newDefVal * mult);
 	}
 
 	@Override
 	public void updateAttack() {
-		this.setAtkVal(0);
+		int newAtkVal = 0;
 		int mult = 1;
 		for (Dice dice : this.getDiceList()) {
 			if (dice.getActionType() == ActionType.ATTACK) {
 				if (dice instanceof MultiplyDice) {
-					mult = ((MultiplyDice) dice).multiply(mult);
-					continue;
+					mult *= dice.getRollVal();
+				} else if (!(dice instanceof DivideDice)) {
+					newAtkVal += dice.getRollVal();
 				}
-				if (dice instanceof DivideDice) {
-					continue;
-				}
-				this.setAtkVal(this.getAtkVal() + dice.getRollVal());
 			}
 		}
-		this.setAtkVal(this.getAtkVal() * mult);
+		this.setAtkVal(newAtkVal * mult);
 	}
 
 	@Override
@@ -153,13 +151,11 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 
 	@Override
 	public int takeDamage(int damage) {
-		int dealt = damage;
-		dealt -= defVal;
-		if (dealt > this.getHp()) {
-			dealt = this.getHp();
-		}
+		int dealt = damage - this.getDefVal();
 		if (dealt < 0) {
 			dealt = 0;
+		} else if (dealt > this.getHp()) {
+			dealt = this.getHp();
 		}
 		this.setDefVal(this.getDefVal() - damage);
 		this.setHp(this.getHp() - dealt);
@@ -168,15 +164,37 @@ public class Player extends BaseUnit implements Attackable, Defendable, Healable
 
 	public void addDice(Dice dice) {
 		this.getDiceList().add(dice);
-		if(dice instanceof DivideDice) {
+		if (dice instanceof DivideDice) {
 			this.getDivDiceList().add((DivideDice) dice);
 		}
+	}
+
+	public void sortDice() {
+		ArrayList<Dice> normalDice = new ArrayList<>();
+		ArrayList<Dice> multiplyDice = new ArrayList<>();
+		ArrayList<Dice> divideDice = new ArrayList<>();
+
+		for (Dice dice : this.diceList) {
+			if (dice instanceof DivideDice) {
+				divideDice.add(dice);
+			} else if (dice instanceof MultiplyDice) {
+				multiplyDice.add(dice);
+			} else {
+				normalDice.add(dice);
+			}
+		}
+
+		this.diceList.clear();
+		this.diceList.addAll(normalDice);
+		this.diceList.addAll(multiplyDice);
+		this.diceList.addAll(divideDice);
 	}
 
 	public void rollDice() {
 		for (Dice dice : this.getDiceList()) {
 			dice.roll();
 		}
+		sortDice();
 	}
 
 	public void setAllDiceAcionType(ActionType actionType) {

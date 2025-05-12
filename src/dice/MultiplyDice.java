@@ -3,7 +3,7 @@ package dice;
 public class MultiplyDice extends Dice {
 
 	public MultiplyDice(int minVal, int maxVal) {
-		super(minVal, maxVal, "dice_multiply.png");
+		super(minVal, maxVal);
 	}
 
 	public int multiply(int val) {

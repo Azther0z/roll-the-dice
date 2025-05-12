@@ -41,8 +41,7 @@ public class Boss extends BaseUnit implements Attackable, Defendable, Healable {
 	public void setAtkVal(int atkVal) {
 		if (atkVal > this.calculateAtkBase()) {
 			atkVal = this.calculateAtkBase();
-		}
-		if (atkVal < 0) {
+		} else if (atkVal < 0) {
 			atkVal = 0;
 		}
 		this.atkVal = atkVal;
@@ -56,8 +55,7 @@ public class Boss extends BaseUnit implements Attackable, Defendable, Healable {
 	public void setDefVal(int defVal) {
 		if (defVal > this.calculateDefBase()) {
 			defVal = this.calculateDefBase();
-		}
-		if (defVal < 0) {
+		} else if (defVal < 0) {
 			defVal = 0;
 		}
 		this.defVal = defVal;
@@ -116,15 +114,17 @@ public class Boss extends BaseUnit implements Attackable, Defendable, Healable {
 
 	@Override
 	public void executeHeal() {
-		this.setHp(this.getHp()+this.getHealVal());
-		this.setWillHeal(this.getWillHeal()+1);
+		if (this.getHealVal() > 0) {
+			this.setHp(this.getHp() + this.getHealVal());
+			this.setWillHeal(this.getWillHeal() + 1);
+		}
 	}
 
 	@Override
 	public void updateDefend() {
 		this.setDefVal(this.calculateDefBase());
-		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
-			if(divDice.getDivTarget().equals(this)) {
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
 				this.setDefVal(divDice.divide(this.getDefVal()));
 			}
 		}
@@ -133,8 +133,8 @@ public class Boss extends BaseUnit implements Attackable, Defendable, Healable {
 	@Override
 	public void updateAttack() {
 		this.setAtkVal(this.calculateAtkBase());
-		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
-			if(divDice.getDivTarget().equals(this)) {
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
 				this.setAtkVal(divDice.divide(this.getAtkVal()));
 			}
 		}
@@ -147,18 +147,15 @@ public class Boss extends BaseUnit implements Attackable, Defendable, Healable {
 
 	@Override
 	public int takeDamage(int damage) {
-		int dealt = damage;
-		if (dealt <= defVal) {
+		int dealt = damage - defVal;
+		if (dealt <= 0) {
 			return 0;
 		}
-		dealt -= defVal;
 		if (dealt > this.getHp()) {
 			dealt = this.getHp();
 		}
 		this.setHp(this.getHp() - dealt);
-		if (dealt > 0) {
-			this.setReceivedCount(this.getReceivedCount() + 1);
-		}
+		this.setReceivedCount(this.getReceivedCount() + 1);
 		if (this.getHp() < (int) Math.round(this.getMaxHp() / 4)) {
 			this.setWillHeal(this.getWillHeal() + 1);
 		}

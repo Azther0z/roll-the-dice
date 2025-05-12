@@ -28,8 +28,7 @@ public class Hybrid extends BaseUnit implements Attackable, Defendable {
 	public void setAtkVal(int atkVal) {
 		if (atkVal > this.defBase) {
 			atkVal = this.defBase;
-		}
-		if (atkVal < 0) {
+		} else if (atkVal < 0) {
 			atkVal = 0;
 		}
 		this.atkVal = atkVal;
@@ -42,8 +41,7 @@ public class Hybrid extends BaseUnit implements Attackable, Defendable {
 	public void setDefVal(int defVal) {
 		if (defVal > this.defBase) {
 			defVal = this.defBase;
-		}
-		if (defVal < 0) {
+		} else if (defVal < 0) {
 			defVal = 0;
 		}
 		this.defVal = defVal;
@@ -51,22 +49,43 @@ public class Hybrid extends BaseUnit implements Attackable, Defendable {
 
 	@Override
 	public void updateDefend() {
-		this.setDefVal(this.defBase);
+		int base = this.defBase;
 		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
 			if (divDice.getDivTarget().equals(this)) {
-				this.setDefVal(divDice.divide(this.getDefVal()));
+				base = divDice.divide(base);
 			}
+		}
+		if (GameLogic.getInstance().getPlayer().getAtkTarget().equals(this)) {
+			int playerAtkVal = GameLogic.getInstance().getPlayer().getAtkVal();
+			if (playerAtkVal > base) {
+				this.setDefVal(base);
+			} else {
+				this.setDefVal(playerAtkVal);
+			}
+
+		} else {
+			this.setDefVal(0);
 		}
 	}
 
 	@Override
 	public void updateAttack() {
-		updateDefend();
-		if (GameLogic.getInstance().getPlayer().getAtkTarget().equals(this)) {
-			this.setAtkVal(defVal - GameLogic.getInstance().getPlayer().getAtkVal());
+		int base = this.defBase;
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
+				base = divDice.divide(base);
+			}
 		}
-		else {
-			this.setAtkVal(defVal);
+		if (GameLogic.getInstance().getPlayer().getAtkTarget().equals(this)) {
+			int playerAtkVal = GameLogic.getInstance().getPlayer().getAtkVal();
+			if (playerAtkVal > base) {
+				this.setAtkVal(0);
+			} else {
+				this.setAtkVal(base - playerAtkVal);
+			}
+
+		} else {
+			this.setAtkVal(base);
 		}
 	}
 
@@ -77,11 +96,10 @@ public class Hybrid extends BaseUnit implements Attackable, Defendable {
 
 	@Override
 	public int takeDamage(int damage) {
-		int dealt = damage;
-		if (dealt <= defVal) {
+		int dealt = damage - defVal;
+		if (dealt <= 0) {
 			return 0;
 		}
-		dealt -= defVal;
 		if (dealt > this.getHp()) {
 			dealt = this.getHp();
 		}
