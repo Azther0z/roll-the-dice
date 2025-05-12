@@ -6,7 +6,7 @@ public class DivideDice extends Dice {
 	private BaseUnit divTarget;
 
 	public DivideDice(int minVal, int maxVal) {
-		super(minVal, maxVal, "dice_divide.png");
+		super(minVal, maxVal);
 		this.setDivTarget(null);
 	}
 

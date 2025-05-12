@@ -1,9 +1,9 @@
 package unit.base;
 
 public interface Attackable {
-	public void updateAttack();
+	void updateAttack();
 
-	public void executeAttack();
-	
-	public int getAtkVal();
+	void executeAttack();
+
+	int getAtkVal();
 }

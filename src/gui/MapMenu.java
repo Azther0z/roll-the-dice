@@ -2,6 +2,8 @@ package gui;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -42,13 +44,12 @@ public class MapMenu extends StackPane {
 		double totalGridHeight = GameConfig.MAX_ROW * GameConfig.MAP_MENU_NODE_HEIGHT
 				+ (GameConfig.MAX_ROW - 1) * GameConfig.MAP_MENU_NODE_VGAP;
 		double startX = (GameConfig.SCREEN_WIDTH - totalGridWidth) / 2;
-		double startY = (GameConfig.SCREEN_HEIGHT - totalGridHeight) / 2;
+		double startY = 0;
 		for (int i = 0; i < GameConfig.MAX_ROW; i++) {
 			for (int j = 0; j < GameConfig.MAX_COL; j++) {
 				Node node = GameLogic.getInstance().getNodeGrid().get(i).get(j);
 				double xPos = startX + j * (GameConfig.MAP_MENU_NODE_WIDTH + GameConfig.MAP_MENU_NODE_HGAP);
 				double yPos = startY + i * (GameConfig.MAP_MENU_NODE_HEIGHT + GameConfig.MAP_MENU_NODE_VGAP);
-
 				node.setPrefSize(GameConfig.MAP_MENU_NODE_WIDTH, GameConfig.MAP_MENU_NODE_HEIGHT);
 				GuiUtils.setLayout(node, xPos, yPos);
 				node.setBackground(new Background(new BackgroundFill(Color.BEIGE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -79,15 +80,11 @@ public class MapMenu extends StackPane {
 		}
 	}
 
-	public VBox createContinueButton() {
-		VBox continueButton = new VBox();
-		continueButton.getChildren().add(GuiUtils.createText("Continue", GameConfig.FONT_SIZE_MEDIUM));
+	public Button createContinueButton() {
+		Button continueButton = new Button("Continue");
 		continueButton.setOnMouseClicked(e -> {
 			this.getChildren().removeLast();
 		});
-		continueButton.setAlignment(Pos.CENTER);
-		continueButton.setMaxSize(GameConfig.MAP_MENU_CONTINUEBUTTON_WIDTH, GameConfig.MAP_MENU_CONTINUEBUTTON_HEIGHT);
-		continueButton.setBackground(new Background(new BackgroundFill(Color.CORAL, CornerRadii.EMPTY, Insets.EMPTY)));
 		return continueButton;
 	}
 

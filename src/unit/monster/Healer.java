@@ -47,9 +47,9 @@ public class Healer extends BaseUnit implements Healable {
 	@Override
 	public void updateHeal() {
 		this.setHealVal(healBase);
-		for (BaseUnit enemy : FightLogic.getInstance().getEnemyList()) {
-			if (enemy.getHp() < healTarget.getHp() && !enemy.equals(healTarget)) {
-				this.setHealTarget(enemy);
+		for (BaseUnit baseUnit : FightLogic.getInstance().getEnemyList()) {
+			if (baseUnit.getHp() < healTarget.getHp() && !baseUnit.equals(healTarget)) {
+				this.setHealTarget(baseUnit);
 			}
 		}
 		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {

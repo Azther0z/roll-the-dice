@@ -1,9 +1,9 @@
 package unit.base;
 
 public interface Healable {
-	public void updateHeal();
+	void updateHeal();
 
-	public void executeHeal();
-	
-	public int getHealVal();
+	void executeHeal();
+
+	int getHealVal();
 }

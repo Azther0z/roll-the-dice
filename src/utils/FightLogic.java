@@ -69,8 +69,8 @@ public class FightLogic {
 	}
 
 	public void updateTurn() {
-		GameLogic.getInstance().getPlayer().updateAttack();
 		GameLogic.getInstance().getPlayer().updateDefend();
+		GameLogic.getInstance().getPlayer().updateAttack();
 		for (BaseUnit enemy : enemyList) {
 			if (enemy instanceof Attackable) {
 				Attackable attackable = (Attackable) enemy;

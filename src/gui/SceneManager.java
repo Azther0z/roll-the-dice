@@ -39,7 +39,7 @@ public class SceneManager {
 		scene = new Scene(root);
 		root.setCenter(mainMenu);
 	}
-	
+
 	public void resetGame() {
 		GameLogic.getInstance().newGameLogic();
 		mainMenu = new MainMenu();

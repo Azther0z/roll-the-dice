@@ -26,8 +26,7 @@ public class Defender extends BaseUnit implements Defendable {
 	public void setDefVal(int defVal) {
 		if (defVal > this.defBase) {
 			defVal = this.defBase;
-		}
-		if (defVal < 0) {
+		} else if (defVal < 0) {
 			defVal = 0;
 		}
 		this.defVal = defVal;
@@ -36,8 +35,8 @@ public class Defender extends BaseUnit implements Defendable {
 	@Override
 	public void updateDefend() {
 		this.setDefVal(this.defBase);
-		for(DivideDice divDice:GameLogic.getInstance().getPlayer().getDivDiceList()) {
-			if(divDice.getDivTarget().equals(this)) {
+		for (DivideDice divDice : GameLogic.getInstance().getPlayer().getDivDiceList()) {
+			if (divDice.getDivTarget().equals(this)) {
 				this.setDefVal(divDice.divide(this.getDefVal()));
 			}
 		}
@@ -45,11 +44,10 @@ public class Defender extends BaseUnit implements Defendable {
 
 	@Override
 	public int takeDamage(int damage) {
-		int dealt = damage;
-		if (dealt <= defVal) {
+		int dealt = damage - defVal;
+		if (dealt <= 0) {
 			return 0;
 		}
-		dealt -= defVal;
 		if (dealt > this.getHp()) {
 			dealt = this.getHp();
 		}

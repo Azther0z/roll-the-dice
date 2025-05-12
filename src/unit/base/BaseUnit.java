@@ -6,7 +6,6 @@ public abstract class BaseUnit {
 	private final String name;
 
 	public BaseUnit(int maxHp, String name) {
-		super();
 		if (maxHp < 1) {
 			maxHp = 1;
 		}
@@ -26,8 +25,7 @@ public abstract class BaseUnit {
 	public void setHp(int hp) {
 		if (hp > this.maxHp) {
 			hp = this.maxHp;
-		}
-		if (hp < 0) {
+		} else if (hp < 0) {
 			hp = 0;
 		}
 		this.hp = hp;

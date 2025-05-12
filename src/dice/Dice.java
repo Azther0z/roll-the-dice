@@ -7,18 +7,12 @@ public class Dice {
 	private int maxVal;
 	private ActionType actionType;
 	private int rollVal;
-	private final String imagePath;
 
 	public Dice(int minVal, int maxVal) {
-		this(minVal, maxVal, "dice.png");
-	}
-
-	public Dice(int minVal, int maxVal, String imagePath) {
 		this.setMinVal(minVal);
 		this.setMaxVal(maxVal);
 		this.setActionType(ActionType.NOTHING);
 		this.setRollVal(minVal);
-		this.imagePath = imagePath;
 	}
 
 	public int getMinVal() {
@@ -65,14 +59,6 @@ public class Dice {
 	}
 
 	public void switchAction() {
-		if (this.getActionType() == ActionType.ATTACK) {
-			this.setActionType(ActionType.DEFEND);
-		} else if (this.getActionType() == ActionType.DEFEND) {
-			this.setActionType(ActionType.ATTACK);
-		}
-	}
-
-	public String getImagePath() {
-		return imagePath;
+		this.setActionType(this.getActionType() == ActionType.ATTACK ? ActionType.DEFEND : ActionType.ATTACK);
 	}
 }

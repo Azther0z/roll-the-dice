@@ -3,7 +3,9 @@ package node;
 import gui.SceneManager;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import utils.GameLogic;
 
 public abstract class Node extends VBox {
@@ -44,9 +46,11 @@ public abstract class Node extends VBox {
 		}
 		if (this.equals(GameLogic.getInstance().getCurrentNode())) {
 			this.status.setText("Selected");
+			this.status.setFill(Color.GRAY);
 		}
 		if (validNodeChosen()) {
 			this.status.setText("Available");
+			this.status.setFill(Color.GREEN);
 		}
 	}
 
